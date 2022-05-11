@@ -28,6 +28,11 @@
 
 PAL_C_LINKAGE_BEGIN
 
+typedef struct font_t {
+    unsigned short code;
+    unsigned char data[32];
+} font_t;
+
 extern char *font_offset_x;
 extern char *font_offset_y;
 

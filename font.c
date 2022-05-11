@@ -182,7 +182,6 @@ static void PAL_LoadEmbeddedFont(void)
 	for (i = 0; i < nChars; i++)
 	{
 		wchar_t w = (wchar_buf[i] >= unicode_upper_base) ? (wchar_buf[i] - unicode_upper_base + unicode_lower_top) : wchar_buf[i];
-		if (w >= sizeof(unicode_font) / sizeof(unicode_font[0])) { continue; }
 		if (fread(unicode_font[w], 30, 1, fp) == 1)
 		{
 			unicode_font[w][30] = 0;
@@ -376,17 +375,10 @@ PAL_LoadUserFont(
                        bFontGlyph[m] |= ((m % 2) ? 1 : 0x80);
                }
 #endif
-               if (w < sizeof(unicode_font) / sizeof(unicode_font[0]))
-               {
-                  memcpy(unicode_font[w], bFontGlyph, sizeof(bFontGlyph));
-                  font_width[w] = font_w << 1;
-                  font_offset_x[w] = bbox;
-                  font_offset_y[w] = _font_height - bboy - bbh - 4;
-               }
-               else
-               {
-                   UTIL_LogOutput(LOGLEVEL_DEBUG, "this user font has much code than unifont! ignoring %d\n", w);
-               }
+               memcpy(unicode_font[w], bFontGlyph, sizeof(bFontGlyph));
+               font_width[w] = font_w << 1;
+               font_offset_x[w] = bbox;
+               font_offset_y[w] = _font_height - bboy - bbh - 4;
             }
 
             state = 0;
@@ -435,22 +427,19 @@ PAL_InitFont(
    const CONFIGURATION* cfg
 )
 {
-#define PAL_LOAD_INTERNAL_FONT(fontdata, height) \
+#define PAL_LOAD_INTERNAL_FONT(fontdata, height, fontsize) \
    { \
-      for (int i = 0; i < sizeof(fontdata) / sizeof(fontdata[0]); i++) \
+      for (int i = 0; i < fontsize; i++) \
       { \
          wchar_t w = fontdata[i].code; \
          w = (w >= unicode_upper_base) ? (w - unicode_upper_base + unicode_lower_top) : w; \
-         if (w < sizeof(unicode_font) / sizeof(unicode_font[0])) \
-         { \
-            memcpy(unicode_font[w], fontdata[i].data, 32); \
-            font_width[w] = 32; \
-         } \
+         memcpy(unicode_font[w], fontdata[i].data, 32); \
+         font_width[w] = 32; \
       } \
       _font_height = height; \
    }
 
-    size_t fonts = sizeof(font_width);
+    size_t fonts = font_size;
     font_offset_x = calloc(1, fonts);
     font_offset_y = calloc(1, fonts);
 
@@ -476,11 +465,11 @@ PAL_InitFont(
          switch (PAL_GetCodePage())
          {
          case CP_GBK:
-            PAL_LOAD_INTERNAL_FONT(fontglyph_cn, 16);
+            PAL_LOAD_INTERNAL_FONT(fontglyph_cn, 16, fontglyph_cn_size);
             break;
 
          case CP_BIG5:
-            PAL_LOAD_INTERNAL_FONT(fontglyph_tw, 15);
+            PAL_LOAD_INTERNAL_FONT(fontglyph_tw, 15, fontglyph_tw_size);
             break;
 
          default:
@@ -489,15 +478,15 @@ PAL_InitFont(
          break;
 
       case kFontFlavorSimpChin:
-         PAL_LOAD_INTERNAL_FONT(fontglyph_cn, 16);
+         PAL_LOAD_INTERNAL_FONT(fontglyph_cn, 16, fontglyph_cn_size);
          break;
 
       case kFontFlavorTradChin:
-         PAL_LOAD_INTERNAL_FONT(fontglyph_tw, 15);
+         PAL_LOAD_INTERNAL_FONT(fontglyph_tw, 15, fontglyph_tw_size);
          break;
 
       case kFontFlavorJapanese:
-         PAL_LOAD_INTERNAL_FONT(fontglyph_jp, 16);
+         PAL_LOAD_INTERNAL_FONT(fontglyph_jp, 16, fontglyph_jp_size);
          break;
 
       case kFontFlavorUnifont:

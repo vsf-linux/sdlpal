@@ -189,7 +189,10 @@ VIDEO_Startup(
 	}
 # endif
 
-   gpRenderer = SDL_CreateRenderer(gpWindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+# ifndef PAL_SDL_RENDERER_FLAGS
+#  define PAL_SDL_RENDERER_FLAGS SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC
+# endif
+   gpRenderer = SDL_CreateRenderer(gpWindow, -1, PAL_SDL_RENDERER_FLAGS);
 
    gRenderBackend.Setup();
 
