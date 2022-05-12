@@ -13,7 +13,11 @@
 # define PAL_HAS_SDLCD                  1
 #endif
 
-#define PAL_SDL_INIT_FLAGS              (SDL_INIT_VIDEO | SDL_INIT_AUDIO)
+#if VSF_USE_AUDIO == ENABLED
+#   define PAL_SDL_INIT_FLAGS           (SDL_INIT_VIDEO | SDL_INIT_AUDIO)
+#else
+#   define PAL_SDL_INIT_FLAGS           SDL_INIT_VIDEO
+#endif
 #define PAL_SDL_RENDERER_FLAGS          0
 
 #define PAL_PLATFORM                    NULL
