@@ -446,7 +446,11 @@ PAL_SplashScreen(
 
 
 int
+#ifdef __VSF__
+sdlpal_main(
+#else
 main(
+#endif
    int      argc,
    char    *argv[]
 )
