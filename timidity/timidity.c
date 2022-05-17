@@ -28,8 +28,8 @@
 
 #include "tables.h"
 
-#include "util.h"
-#include "text.h"
+#include "../util.h"
+#include "../text.h"
 
 ToneBank *master_tonebank[MAXBANK], *master_drumset[MAXBANK];
 

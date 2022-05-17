@@ -26,7 +26,7 @@
 #include "audio.h"
 #include "players.h"
 
-#include "timidity.h"
+#include "timidity/timidity.h"
 
 typedef struct tagTIMIDITYPLAYER
 {

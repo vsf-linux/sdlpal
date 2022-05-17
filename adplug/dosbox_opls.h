@@ -25,7 +25,7 @@
 #ifndef SDLPAL_DOSBOX_OPLS_H
 #define SDLPAL_DOSBOX_OPLS_H
 
-#include "common.h"
+#include "../common.h"
 #include "dosbox/dosbox.h"
 #include "emuopls.h"
 
