@@ -28,7 +28,19 @@
 #include <stdint.h>
 #include <math.h>
 #include <string.h>
+
+#undef __WIN_STRING_DEF_MSC_VER
+#if defined(__WIN__) && !defined(_MSC_VER)
+#   define _MSC_VER    1926
+#   define __WIN_STRING_DEF_MSC_VER
+#endif
+
 #include <algorithm>
+
+#ifdef __WIN_STRING_DEF_MSC_VER
+#   undef __WIN_STRING_DEF_MSC_VER
+#   undef _MSC_VER
+#endif
 
 typedef void device_t;
 struct attotime {};
