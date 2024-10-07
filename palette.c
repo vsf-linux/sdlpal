@@ -77,6 +77,7 @@ PAL_GetPalette(
       palette[i].r = buf[(fNight ? 256 * 3 : 0) + i * 3] << 2;
       palette[i].g = buf[(fNight ? 256 * 3 : 0) + i * 3 + 1] << 2;
       palette[i].b = buf[(fNight ? 256 * 3 : 0) + i * 3 + 2] << 2;
+      palette[i].a = 0xFF;
 #if 0
       palette[i].r += (255 - palette[i].r) / 5;
       palette[i].g += (255 - palette[i].g) / 5;
@@ -174,6 +175,7 @@ PAL_FadeOut(
          newpalette[i].r = (palette[i].r * j) >> 6;
          newpalette[i].g = (palette[i].g * j) >> 6;
          newpalette[i].b = (palette[i].b * j) >> 6;
+         newpalette[i].a = 0xFF;
       }
 
       VIDEO_SetPalette(newpalette);
@@ -181,7 +183,14 @@ PAL_FadeOut(
       UTIL_Delay(10);
    }
 
-   memset(newpalette, 0, sizeof(newpalette));
+//   memset(newpalette, 0, sizeof(newpalette));
+   for (i = 0; i < 256; i++)
+   {
+      newpalette[i].r = 0;
+      newpalette[i].g = 0;
+      newpalette[i].b = 0;
+      newpalette[i].a = 0xFF;
+   }
    VIDEO_SetPalette(newpalette);
 }
 
@@ -242,6 +251,7 @@ PAL_FadeIn(
          newpalette[i].r = (palette[i].r * j) >> 6;
          newpalette[i].g = (palette[i].g * j) >> 6;
          newpalette[i].b = (palette[i].b * j) >> 6;
+         newpalette[i].a = 0xFF;
       }
 
       VIDEO_SetPalette(newpalette);
@@ -319,6 +329,7 @@ PAL_SceneFade(
             newpalette[j].r = (palette[j].r * i) >> 6;
             newpalette[j].g = (palette[j].g * i) >> 6;
             newpalette[j].b = (palette[j].b * i) >> 6;
+            newpalette[j].a = 0xFF;
          }
          VIDEO_SetPalette(newpalette);
 
@@ -355,6 +366,7 @@ PAL_SceneFade(
             newpalette[j].r = (palette[j].r * i) >> 6;
             newpalette[j].g = (palette[j].g * i) >> 6;
             newpalette[j].b = (palette[j].b * i) >> 6;
+            newpalette[j].a = 0xFF;
          }
          VIDEO_SetPalette(newpalette);
 
@@ -425,6 +437,7 @@ PAL_PaletteFade(
             (BYTE)(((INT)(palette[j].g) * (31 - i) + (INT)(newpalette[j].g) * i) / 31);
          t[j].b =
             (BYTE)(((INT)(palette[j].b) * (31 - i) + (INT)(newpalette[j].b) * i) / 31);
+         t[j].a = 0xFF;
       }
       VIDEO_SetPalette(t);
 

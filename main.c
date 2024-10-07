@@ -309,6 +309,7 @@ PAL_SplashScreen(
             rgCurrentPalette[i].r = (BYTE)(palette[i].r * ((float)dwTime / 15000));
             rgCurrentPalette[i].g = (BYTE)(palette[i].g * ((float)dwTime / 15000));
             rgCurrentPalette[i].b = (BYTE)(palette[i].b * ((float)dwTime / 15000));
+            rgCurrentPalette[i].a = 0xFF;
          }
       }
 
@@ -404,6 +405,7 @@ PAL_SplashScreen(
                   rgCurrentPalette[i].r = (BYTE)(palette[i].r * ((float)dwTime / 15000));
                   rgCurrentPalette[i].g = (BYTE)(palette[i].g * ((float)dwTime / 15000));
                   rgCurrentPalette[i].b = (BYTE)(palette[i].b * ((float)dwTime / 15000));
+                  rgCurrentPalette[i].a = 0xFF;
                }
                VIDEO_SetPalette(rgCurrentPalette);
                VIDEO_UpdateSurfacePalette(lpBitmapDown);

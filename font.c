@@ -182,6 +182,7 @@ static void PAL_LoadEmbeddedFont(void)
 	for (i = 0; i < nChars; i++)
 	{
 		wchar_t w = (wchar_buf[i] >= unicode_upper_base) ? (wchar_buf[i] - unicode_upper_base + unicode_lower_top) : wchar_buf[i];
+        if (w >= unicode_font_size) { continue; }
 		if (fread(unicode_font[w], 30, 1, fp) == 1)
 		{
 			unicode_font[w][30] = 0;
@@ -375,10 +376,17 @@ PAL_LoadUserFont(
                        bFontGlyph[m] |= ((m % 2) ? 1 : 0x80);
                }
 #endif
-               memcpy(unicode_font[w], bFontGlyph, sizeof(bFontGlyph));
-               font_width[w] = font_w << 1;
-               font_offset_x[w] = bbox;
-               font_offset_y[w] = _font_height - bboy - bbh - 4;
+               if (w < unicode_font_size)
+               {
+                  memcpy(unicode_font[w], bFontGlyph, sizeof(bFontGlyph));
+                  font_width[w] = font_w << 1;
+                  font_offset_x[w] = bbox;
+                  font_offset_y[w] = _font_height - bboy - bbh - 4;
+               }
+               else
+               {
+                   UTIL_LogOutput(LOGLEVEL_DEBUG, "this user font has much code than unifont! ignoring %d\n", w);
+               }
             }
 
             state = 0;
@@ -433,13 +441,16 @@ PAL_InitFont(
       { \
          wchar_t w = fontdata[i].code; \
          w = (w >= unicode_upper_base) ? (w - unicode_upper_base + unicode_lower_top) : w; \
-         memcpy(unicode_font[w], fontdata[i].data, 32); \
-         font_width[w] = 32; \
+         if (w < unicode_font_size) \
+         { \
+            memcpy(unicode_font[w], fontdata[i].data, 32); \
+            font_width[w] = 32; \
+         } \
       } \
       _font_height = height; \
    }
 
-    size_t fonts = font_size;
+    size_t fonts = unicode_font_size;
     font_offset_x = calloc(1, fonts);
     font_offset_y = calloc(1, fonts);
 
